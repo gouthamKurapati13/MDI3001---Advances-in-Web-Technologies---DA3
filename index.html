@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>22MID0088 | DA3</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .input-fields {
+            font-size: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 32px;
+        }
+
+        input {
+            margin-bottom: 10px;
+
+            font-size: 32px;
+        }
+
+        button {
+            cursor: pointer;
+            font-size: 32px;
+            margin-left: 10px;
+            border: none;
+            background-color: black;
+            color: white;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
+        button:hover {
+            background-color: rgba(0, 0, 0, 0.832);
+        }
+
+        table {
+            width: 60%;
+            border-collapse: collapse;
+            margin: 20px auto;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 54px;
+        }
+
+        .image-slideshow, .digital-clock, .online-voting {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-slideshow img {
+            width: 720px;
+            height: 450px;
+            margin: 20px auto;
+        }
+
+        .slideshow-controls {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 5px;
+        }
+
+        #time {
+            font-size: 120px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="word-counter">
+        <h1>Vowels & Consonants Counter</h1>
+        <div class="input-fields">
+            <label for="words_input">Enter the words separated by comma: </label>
+            <input type="text" id="words_input" />
+            <button id="submit" onclick="getWords()">Submit</button>
+        </div>
+        <br><br>
+        <table id="words_output" border="2">
+            <tr>
+                <th>Words</th>
+                <th>Count of Consonants</th>
+                <th>Count of Vowels</th>
+            </tr>
+        </table>
+    </div>
+    <hr />
+    <div class="image-slideshow">
+        <h1>Image Slideshow</h1>
+        <div class="slideshow">
+            <img id="display_img" src="" alt="image">
+            <div class="slideshow-controls">
+                <button onclick="prevImg()">Prev</button>
+                <button onclick="nextImg()">Next</button>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div class="digital-clock">
+        <h1>Digital Clock</h1>
+        <div id="time">
+        </div>
+    </div>
+    <hr />
+    <div class="online-voting">
+        <h1>Online Voting</h1>
+        <p>Select from the below options to which you would like to cast your vote:</p>
+        <div id="voting">
+            <button onclick="addVote('Python')">Python</button>
+            <button onclick="addVote('Java')">Java</button>
+            <button onclick="addVote('C++')">C++</button>
+        </div>
+        <table id="voting-results" border="2">
+            <tr>
+                <th>Candidate</th>
+                <th>Votes</th>
+            </tr>
+            <tr>
+                <td>Python</td>
+                <td id="python-votes">0</td>
+            </tr>
+            <tr>
+                <td>Java</td>
+                <td id="java-votes">0</td>
+            </tr>
+            <tr>
+                <td>C++</td>
+                <td id="cpp-votes">0</td>
+            </tr>
+        </table>
+    </div>
+    <script>
+        function getWords() {
+            const words_input = document.getElementById('words_input');
+            const words = words_input.value.split(',');
+            for (let word in words) {
+                const consonants = words[word].match(/[bcdfghjklmnpqrstvwxyz]/gi).length;
+                const vowels = words[word].match(/[aeiou]/gi).length;
+                const table = document.getElementById("words_output");
+                const row = table.insertRow(-1);
+                const cell1 = row.insertCell(0);
+                const cell2 = row.insertCell(1);
+                const cell3 = row.insertCell(2);
+                cell1.innerHTML = words[word];
+                cell2.innerHTML = consonants;
+                cell3.innerHTML = vowels;
+            }
+        }
+
+        const images = [
+            "./img1.jpg", "./img2.jpg", "./img3.jpg", "./img4.jpg"
+        ];
+        let i = 0;
+        let interval;
+
+        function startSlideshow() {
+            interval = setInterval(() => {
+            document.getElementById('display_img').src = images[i];
+            i = (i + 1) % images.length;
+            }, 2000);
+        }
+
+        function nextImg() {
+            clearInterval(interval);
+            i = (i + 1) % images.length;
+            document.getElementById('display_img').src = images[i];
+            startSlideshow();
+        }
+
+        function prevImg() {
+            clearInterval(interval);
+            if ((i-1)>=0)
+                i = i-1;
+            else
+                i = images.length - 1;
+            document.getElementById('display_img').src = images[i];
+            startSlideshow();
+        }
+
+        startSlideshow();
+
+        setInterval(() => {
+            const today = new Date();
+            let h = today.getHours();
+            let m = today.getMinutes();
+            let s = today.getSeconds();
+            if (h<10)
+                h = "0" + h;
+            if (m<10)
+                m = "0" + m;
+            if (s<10)
+                s = "0" + s;
+            document.getElementById('time').innerHTML = h + " : " + m + " : " + s;
+            }, 1000);
+        
+
+        
+        let python=0;
+        let java=0;
+        let cpp=0;
+        function addVote(option) {
+            if (option=="Python") {
+                python += 1;
+                document.getElementById("python-votes").innerHTML = python;
+            } else if (option=="Java") {
+                java += 1;
+                document.getElementById("java-votes").innerHTML = java;
+            } if (option=="C++") {
+                cpp += 1;
+                document.getElementById("cpp-votes").innerHTML = cpp;
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>
